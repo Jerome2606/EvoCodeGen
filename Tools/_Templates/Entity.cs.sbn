@@ -1,0 +1,26 @@
+﻿{{for m in model
+~}}
+/*
+Generated automatically on {{date.now}}
+*/
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace [GLOBAL_NAMESPACE].Models
+{
+    public class {{m.entityName}}Entity {{m.baseClass != empty ? (": " + m.baseClass) : ""}}
+    {
+{{for p in m.properties
+~}}
+{{if p.maxLength
+~}}
+        [StringLength({{p.maxLength}})]
+{{~
+end}}
+        public {{p.propertyType | string.capitalize}}{{p.propertyType == "dateTime" && p.required == "False" ? "?" : ""}} {{p.propertyName}} { get; set; }
+{{~
+end}}
+    }
+}
+{{~
+end}}
