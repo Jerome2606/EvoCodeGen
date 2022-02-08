@@ -53,7 +53,6 @@ namespace EvoCodeGen
                 _window = value;
                 _window.ViewModel.GenerateCode += (ok) =>
                 {
-
                     this.package.JoinableTaskFactory.RunAsync(async delegate
                     {
                         var result = await new EvoCodeGenerator(new EvoCodeGeneratorConfiguration()).GenerateCode(new EvoCodeGeneratorModel
@@ -65,7 +64,7 @@ namespace EvoCodeGen
                             TemplateFiles = _window.ViewModel.Templates.Cast<string>(),
                             StaticReplacer = new List<KeyValuePair<string, string>>
                         {
-                            new KeyValuePair<string, string>("[GLOBAL_NAMESPACE", _current_project.GetRootNamespace())
+                            new KeyValuePair<string, string>("[GLOBAL_NAMESPACE]", _current_project.GetRootNamespace())
                         }
                         });
 
