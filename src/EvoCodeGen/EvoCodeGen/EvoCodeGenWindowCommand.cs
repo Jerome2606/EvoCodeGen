@@ -53,7 +53,6 @@ namespace EvoCodeGen
                 _window = value;
                 _window.ViewModel.GenerateCode += (ok) =>
                 {
-
                     this.package.JoinableTaskFactory.RunAsync(async delegate
                     {
                         var result = await new EvoCodeGenerator(new EvoCodeGeneratorConfiguration()).GenerateCode(new EvoCodeGeneratorModel
