@@ -1,0 +1,65 @@
+﻿{{for m in model
+~}}
+/*
+Generated automatically on {{date.now}}
+*/
+using [GLOBAL_NAMESPACE].DataBase.Managers;
+using [GLOBAL_NAMESPACE].Models;
+using System.Collections.Generic;
+
+namespace [GLOBAL_NAMESPACE].Readers
+{
+    public class {{m.entityName}}Reader : AudioManagementDataBaseReader<{{m.entityName}}>
+    {
+        public {{m.entityName}}Reader(StoreverContext context)
+            : base(context)
+        {
+        }
+
+        protected new {{m.entityName}}Manager Manager
+        {
+            get { return ({{m.entityName}}Manager)base.Manager; }
+        }
+
+        protected new {{m.entityName}} Model
+        {
+            get { return ({{m.entityName}})base.Model; }
+            set { base.Model = value; }
+        }
+
+        protected override void Initialise()
+        {
+            base.Model = new {{m.entityName}}();
+
+            var dbContext = StoreverContext as DataBaseContext;
+            if (dbContext?.Transaction != null)
+                base.Manager = new {{m.entityName}}Manager(dbContext.Transaction);
+            else
+                base.Manager = new {{m.entityName}}Manager(base.ConnectionString);
+        }
+
+        public {{m.entityName}} GetModel(Guid {{m.entityName | string.downcase}}Uuid)
+        {
+            Initialise();
+
+            var result = Manager.Read({{m.entityName | string.downcase}}Uuid);
+
+            Assert_Execution(Manager);
+
+            return result;
+        }
+
+        public IEnumerable<{{m.entityName}}> GetModels({{m.entityName}}Filter filter)
+        {
+            Initialise();
+
+            var results = Manager.List(filter);
+
+            Assert_Execution(Manager);
+
+            return results;
+        }
+    }
+}
+{{~
+end}}

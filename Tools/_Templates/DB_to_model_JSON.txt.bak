@@ -1,0 +1,71 @@
+select 
+    schema_name([models].[schema_id])  [databaseTableSchema], 
+    [models].name [entityName], 
+    [models].name [entityNamePlural], 
+    [models].name [databaseTableName], 
+	(select TOP 1 pkTable.COLUMN_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE pkTable where pkTable.TABLE_NAME = [models].name 
+			AND pkTable.TABLE_SCHEMA = schema_name([models].[schema_id]) AND pkTable.CONSTRAINT_NAME like 'PK[_]%') as primaryKeyName,
+	'TODO_FILL_ME' as primaryKeyType,
+    properties.name [propertyName], 
+    ~properties.is_nullable [required], 
+    CASE WHEN pk.CONSTRAINT_NAME like 'PK[_]%' THEN convert(bit,1) ELSE convert(bit,0) END [primaryKey], 
+    properties.is_identity [identity], 
+    --[properties].encryption_algorithm_name, 
+    --[properties].encryption_type_desc, 
+    --case when cek.name is null then null else cek.name end as CEK_Name, 
+    CASE WHEN properties.ColTypeName in ('varchar','ntext','nvarchar','text') THEN 'string'
+	WHEN properties.ColTypeName = 'uniqueidentifier' THEN 'guid'
+	WHEN properties.ColTypeName = 'tinyint' THEN 'byte'
+	WHEN properties.ColTypeName = 'smallint' THEN 'int16'
+	WHEN properties.ColTypeName = 'int' THEN 'int32'
+	WHEN properties.ColTypeName = 'bigint' THEN 'int64'
+	WHEN properties.ColTypeName = 'bit' THEN 'boolean'
+	WHEN properties.ColTypeName in ('binary','image','timestamp','varbinary') THEN 'byte[]'
+	WHEN properties.ColTypeName = 'float' THEN 'double'
+	WHEN properties.ColTypeName = 'time' THEN 'timeSpan'
+	WHEN properties.ColTypeName in ('money','numeric','smallmoney') THEN 'decimal'
+	WHEN properties.ColTypeName in ('date','datetime','datetime2') THEN 'dateTime'
+	WHEN properties.ColTypeName in ('datetimeoffset') THEN 'dateTimeOffset'
+	ELSE properties.ColTypeName END propertyType, 
+    cast
+        (case when properties.ColTypeName in ('text', 'uniqueidentifier')
+            then null
+            else 
+                case when properties.precision=0 and properties.ColTypeName not in ('text', 'uniqueidentifier')
+                    then properties.max_length 
+                    else null 
+                end
+            end
+        as smallint) [maxLength], 
+    cast(case when properties.precision>0 and properties.ColTypePrecision=properties.ColTypeScale 
+            then properties.precision else null end as tinyint) [precision], 
+    cast(case when properties.precision>0 and properties.ColTypePrecision=properties.ColTypeScale 
+            then properties.scale else null end as tinyint) [scale], 
+    cast(case when properties.is_identity=1 
+            then seed_value else null end as sql_variant) [seed_value], 
+    cast(case when properties.is_identity=1 
+            then increment_value else null end as sql_variant) [increment_value], 
+    cast(case when properties.default_object_id>0 
+            then properties.definition else null end as nvarchar(4000)) [default_value] 
+from sys.objects [models]
+    left join sys.identity_columns id on [models].object_id=id.object_id 
+    join (select [properties].name, [properties].object_id, [properties].default_object_id, [properties].is_identity, [properties].scale, 
+				[properties].precision, [Column Type].precision ColTypePrecision, [Column Type].scale ColTypeScale, [Column Type].name ColTypeName,
+				[properties].max_length, [properties].is_nullable, d.definition
+		from sys.columns [properties]
+		left join sys.column_encryption_keys cek 
+			on [properties].column_encryption_key_id = CEK.column_encryption_key_id
+		join sys.types [Column Type] on [properties].system_type_id=[Column Type].system_type_id 
+			and [Column Type].system_type_id=[Column Type].user_type_id 
+		left join sys.default_constraints d on [properties].default_object_id=d.object_id 
+		) as properties on [models].object_id=properties.object_id 
+	left join INFORMATION_SCHEMA.KEY_COLUMN_USAGE pk on pk.TABLE_NAME = [models].name 
+			AND pk.TABLE_SCHEMA =  schema_name([models].[schema_id]) AND pk.COLUMN_NAME = properties.name
+where [models].type='u' AND [models].name = 'Applications'
+order by [databaseTableSchema], [databaseTableName] 
+for json auto, root('models')
+
+
+exemple:
+
+{"models":[{"databaseTableSchema":"dbo","entityName":"Applications","entityNamePlural":"Applications","databaseTableName":"Applications","primaryKeyName":"ID","primaryKeyType":"TODO_FILL_ME","properties":[{"propertyName":"ID","required":true,"primaryKey":true,"identity":true,"propertyType":"int32","seed_value":1,"increment_value":1},{"propertyName":"Name","required":true,"primaryKey":false,"identity":false,"propertyType":"string","maxLength":50},{"propertyName":"ApiKey","required":false,"primaryKey":false,"identity":false,"propertyType":"string","maxLength":500},{"propertyName":"Url","required":false,"primaryKey":false,"identity":false,"propertyType":"string","maxLength":150},{"propertyName":"Sharing","required":false,"primaryKey":false,"identity":false,"propertyType":"string","maxLength":50}]}]}

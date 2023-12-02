@@ -1,0 +1,40 @@
+﻿{{for m in model
+~}}
+/*
+Generated automatically on {{date.now}}
+*/
+using [GLOBAL_NAMESPACE].Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace [GLOBAL_NAMESPACE].DataBase.Managers
+{
+    public partial class {{m.entityName}}Manager
+    {
+        internal {{m.entityName}} Read(Guid {{m.entityName | string.downcase}}Uuid)
+        {
+            var cmd = CreateCommand();
+
+            cmd.CommandText = string.Format("Select {0} From {1} Where @{2} = {3}", Fields, TableNameWithSchema,
+                "UUID", "Uuid");
+
+            cmd.Parameters.AddWithValue("@UUID", {{m.entityName | string.downcase}}Uuid);
+
+            return base.GetElement(cmd);
+        }
+
+        internal IEnumerable<{{m.entityName}}> List({{m.entityName}}Filter filter)
+        {
+            var query = $"SELECT {this.Fields} from {this.TableNameWithSchema} ";
+
+            // TODO fill filter
+
+            var results = this.List(query);
+
+            return results;
+        }
+    }
+}
+{{~
+end}}

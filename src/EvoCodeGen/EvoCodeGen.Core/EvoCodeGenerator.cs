@@ -167,7 +167,8 @@ namespace EvoCodeGen.Core.Models
 
                 if (Path.GetExtension(templateFile) == ".mbl")
                 {
-                    return new Engine().ProcessTemplate(content, new TemplatingHost(templateFile, new { TableName = name }));
+                    throw new NotImplementedException("mbl files are no more supported, please migrate to Scriban files (.sbn)");
+                    //return new Engine().ProcessTemplate(content, new TemplatingHost(templateFile, new { TableName = name }));
 
                 }
                 else if (Path.GetExtension(templateFile) == ".sbn")

@@ -1,0 +1,245 @@
+﻿{{for m in model
+~}}
+/*
+Generated automatically on {{date.now}}
+*/
+using [GLOBAL_NAMESPACE].Models;
+using Storever.Framework.Common.Extensions;
+using Storever.Framework.DataBase;
+using Storever.Framework.DataBase.Managers;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace [GLOBAL_NAMESPACE].DataBase.Managers
+{
+    public partial class {{m.entityName}}Manager : BaseManager<{{m.entityName}}>
+    {
+        #region "Override Local"
+
+        private string _TablePrimaryKey = "ID";
+        private string _TableName = "{{m.databaseTableName}}";
+{{for p in m.properties}}{{if p.primaryKey == "True"}}
+        private bool _identity = {{ p.identity == "True" ? "true" : "false" }};
+{{end}}{{end}}
+        private string _SQLSchema = "{{m.databaseTableSchema}}";
+        private IsolationLevel _IsolationLevel = IsolationLevel.Serializable;
+
+        #endregion "Override Local"
+
+        #region "Override Properties"
+
+        protected override string[] _Fields
+        {
+            get
+            {
+                return new string[] { 
+{{for p in m.properties
+~}}
+                    "{{p.propertyName}}"{{ !for.last ? "," : "" }}
+{{~
+end}}
+                };
+            }
+        }
+
+        public override string TablePrimaryKey
+        {
+            get
+            {
+                return _TablePrimaryKey;
+            }
+            set
+            {
+                _TablePrimaryKey = value;
+            }
+        }
+
+        public override string TableName
+        {
+            get
+            {
+                return _TableName;
+            }
+        }
+
+        protected override bool Identity
+        {
+            get
+            {
+                return _identity;
+            }
+        }
+
+        public override string SQLSchema
+        {
+            get
+            {
+                return _SQLSchema;
+            }
+            set
+            {
+                _SQLSchema = value;
+            }
+        }
+
+        public override IsolationLevel IsolationLevel
+        {
+            get
+            {
+                return _IsolationLevel;
+            }
+            set
+            {
+                _IsolationLevel = value;
+            }
+        }
+
+        #endregion "Override Properties"
+
+        public delegate void ExternalFillDelegate(SqlDataReader reader, ref {{m.entityName}} element);
+
+        public ExternalFillDelegate ExternalFill { get; set; }
+
+        public delegate SqlParameter[] ExternalGetParametersDelegate({{m.entityName}} element, bool Identity);
+
+        public ExternalGetParametersDelegate ExternalGetParameters { get; set; }
+
+        #region "Constructors"
+
+        public {{m.entityName}}Manager(string ConnectionString)
+        {
+            SQLWrapper = new MSSQLWrapper();
+            this.ConnectionString = ConnectionString;
+            _DatabaseProvider = ConnectionString;
+        }
+
+        public {{m.entityName}}Manager(IDbConnection Connection)
+        {
+            SQLWrapper = new MSSQLWrapper();
+            this._Connection = Connection;
+            _DatabaseProvider = Connection;
+        }
+
+        public {{m.entityName}}Manager(IDbTransaction Transaction)
+        {
+            SQLWrapper = new MSSQLWrapper();
+            this._Transaction = Transaction;
+            _DatabaseProvider = Transaction;
+        }
+
+        protected {{m.entityName}}Manager(object DataBaseProvider)
+        {
+            if (DataBaseProvider.GetType() == typeof(string))
+            {
+                this.ConnectionString = (string)DataBaseProvider;
+            }
+            else if (DataBaseProvider.GetType() == typeof(IDbConnection))
+            {
+                this._Connection = (IDbConnection)DataBaseProvider;
+            }
+            else if (DataBaseProvider.GetType() == typeof(IDbTransaction))
+            {
+                this._Transaction = (IDbTransaction)DataBaseProvider;
+            }
+
+            _DatabaseProvider = DataBaseProvider;
+        }
+
+        #endregion "Constructors"
+
+        #region "Loading Methods"
+
+        protected override void FillObject(SqlDataReader reader, ref {{m.entityName}} element)
+        {
+            if (ExternalFill != null)
+            {
+                ExternalFill.Invoke(reader, ref element);
+                return;
+            }
+
+            base.FillObject(reader, ref element);
+
+{{for p in m.properties
+~}}
+{{if p.required == "True"}}
+            element.{{p.propertyName}} = ({{p.propertyType | string.capitalize}})reader["{{p.propertyName}}"];
+{{else}}
+            element.{{p.propertyName}} = reader.Get{{p.propertyType | string.capitalize}}Safe("{{p.propertyName}}");
+{{end}}
+{{~
+end}}
+        }
+
+        protected override {{m.entityName}} InitialiseObject(SqlDataReader reader)
+        {
+            return new {{m.entityName}}();
+        }
+
+        protected override SqlParameter[] GetParameters({{m.entityName}} element, bool Identity)
+        {
+            var param = new List<SqlParameter>();
+            if (!Identity)
+            {
+                param.Add(new SqlParameter("@{{m.primaryKeyName}}", element.{{m.primaryKeyName}}));
+            }
+
+{{for p in m.properties
+~}}
+{{if p.primaryKey == "False"}}
+{{if p.required == "True"}}
+            param.Add(new SqlParameter("@{{p.propertyName}}", element.{{p.propertyName}}));
+{{else}}
+            if (element.{{p.propertyName}} != null)
+            {
+                param.Add(new SqlParameter("@{{p.propertyName}}", element.{{p.propertyName}}));
+            }
+            else
+            {
+                param.Add(new SqlParameter("@{{p.propertyName}}", DBNull.Value));
+            }
+{{end}}
+{{end}}
+{{~
+end}}
+            return param.ToArray();
+        }
+
+        protected override void FillPrimayKey(ref {{m.entityName}} elt, long value)
+        {
+            elt.{{m.primaryKeyName}} = ({{m.primaryKeyType | string.capitalize}})value;
+        }
+
+        #endregion "Loading Methods"
+
+        #region "Single Load Methods"
+
+        public {{m.entityName}} Read({{m.primaryKeyType | string.capitalize}} {{m.primaryKeyName}})
+        {
+            var cmd = CreateCommand();
+
+            cmd.CommandText = string.Format("Select {0} From {1} Where @{2} = {3}", Fields, TableNameWithSchema,
+                "PK", TablePrimaryKey);
+                
+            cmd.Parameters.AddWithValue("@PK", {{m.primaryKeyName}});
+
+            return base.GetElement(cmd);
+        }
+
+        public bool Delete({{m.primaryKeyType | string.capitalize}} {{m.primaryKeyName}})
+        {
+            var cmd = CreateCommand();
+
+            cmd.CommandText = String.Format("Delete From {0} Where {1} = @{2}", TableNameWithSchema, TablePrimaryKey, "PK");
+
+            cmd.Parameters.AddWithValue("@PK", {{m.primaryKeyName}});
+
+            return ExecuteDeleteCommand(cmd);
+        }
+
+        #endregion "Single Load Methods"
+    }
+}
+{{~
+end}}

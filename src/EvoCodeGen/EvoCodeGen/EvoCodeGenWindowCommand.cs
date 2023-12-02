@@ -65,7 +65,7 @@ namespace EvoCodeGen
                             TemplateFiles = _window.ViewModel.Templates.Cast<string>(),
                             StaticReplacer = new List<KeyValuePair<string, string>>
                         {
-                            new KeyValuePair<string, string>("[GLOBAL_NAMESPACE", _current_project.GetRootNamespace())
+                            new KeyValuePair<string, string>("[GLOBAL_NAMESPACE]", _current_project.GetRootNamespace())
                         }
                         });
 
