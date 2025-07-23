@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="EvoCodeGen.54bf56dc-7b53-40ae-ad62-e74d6579a612" Version="1.0" Language="en-US" Publisher="MM_MSDN" />
+        <DisplayName>Evo Code Generator</DisplayName>
+        <Description xml:space="preserve">Evo Code Generator allows you to generate code using your own templates (typically placed in your project within "_Templates" folder) and with different kind of model.
+Use generator to generate your model like "JSON source folder" or "SQL models generator".
+Your template should have ".sbn" and language supported is Scriban.Evo Code </Description>
+        <Tags>code generator, code generation, code template, code templating, generator, templates, scriban, textrude</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0]">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0]" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
+</PackageManifest>

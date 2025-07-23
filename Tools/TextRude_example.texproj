@@ -1,0 +1,50 @@
+{
+  "Version": 1,
+  "Description": "",
+  "EngineInput": {
+    "Definitions": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "IncludePaths": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Models": [
+      {
+        "Format": 0,
+        "Text": "[\r\n    {\r\n        \u0022entityName\u0022: \u0022Car\u0022,\r\n        \u0022entityNamePlural\u0022: \u0022Cars\u0022,\r\n        \u0022databaseTableName\u0022: \u0022Cars\u0022,\r\n        \u0022baseClass\u0022: null,\r\n        \u0022primaryKeyType\u0022: \u0022int\u0022,\r\n        \u0022properties\u0022:\r\n        [\r\n        { \r\n            \u0022propertyType\u0022:\u0022string\u0022,\r\n            \u0022propertyName\u0022: \u0022Model\u0022,\r\n            \u0022minLength\u0022:1,\r\n            \u0022maxLength\u0022:100,\r\n            \u0022regex\u0022:null,\r\n            \u0022required\u0022:true,\r\n            \u0022primaryKey\u0022:false\r\n        },\r\n        {\r\n            \u0022propertyType\u0022:\u0022dateTime\u0022,\r\n            \u0022propertyName\u0022: \u0022PurchaseDate\u0022,\r\n            \u0022required\u0022:false,\r\n            \u0022primaryKey\u0022:false\r\n        }\r\n        ]\r\n    }\r\n]",
+        "Path": "",
+        "Name": "model"
+      },
+      {
+        "Format": 2,
+        "Text": "",
+        "Path": "",
+        "Name": "model1"
+      }
+    ],
+    "Template": "{{for m in model\r\n~}}\r\n/*\r\nGenerated automatically on {{date.now}}\r\n*/\r\nusing System;\r\nusing System.ComponentModel.DataAnnotations;\r\n\r\nnamespace [GLOBAL_NAMESPACE].Models\r\n{\r\n    public class {{m.entityName}}Entity {{m.baseClass != null ? (\u0022: \u0022 \u002B m.baseClass) : \u0022\u0022}}\r\n    {\r\n{{for p in m.properties\r\n~}}\r\n{{if p.maxLength\r\n~}}\r\n        [StringLength({{p.maxLength}})]\r\n{{~\r\nend}}\r\n        public {{p.propertyType | string.capitalize}}{{p.propertyType == \u0022datetime\u0022 \u0026\u0026 p.required == false ? \u0022?\u0022 : \u0022\u0022}} {{p.propertyName}} { get; set; }\r\n{{~\r\nend}}\r\n    }\r\n}\r\n{{~\r\nend}}",
+    "TemplatePath": ""
+  },
+  "OutputControl": {
+    "Outputs": [
+      {
+        "Format": "",
+        "Name": "output",
+        "Path": ""
+      }
+    ]
+  }
+}

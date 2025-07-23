@@ -1,0 +1,28 @@
+﻿{{for m in model
+~}}
+/*
+Generated automatically on {{date.now}}
+*/
+using Storever.Framework.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace [GLOBAL_NAMESPACE].Models
+{
+    public class {{m.entityName}} : NamedBaseModel
+    {
+{{for p in m.properties
+~}}
+{{if p.propertyName != "ID" && p.propertyName != "Name" }}
+        public {{p.propertyType | string.capitalize}}{{p.required == "False" && (['string'] | !array.contains p.propertyType) ? "?" : ""}} {{p.propertyName}} { get; set; }
+{{end}}
+{{~
+end}}
+    }
+}
+
+{{~
+end}}
