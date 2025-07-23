@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvoCodeGen.Extension", "Evo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvoCodeGen.Core", "EvoCodeGen.Core\EvoCodeGen.Core.csproj", "{D8905DA6-E50D-4A5B-9D50-73607ECC71EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvoCodeGen.Cli", "EvoCodeGen.Cli\EvoCodeGen.Cli.csproj", "{CDBABA63-DD3D-48AE-A916-F4E7ABFF8353}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,11 +19,15 @@ Global
 		{27713E91-B65E-4254-93D5-39B029F9547B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27713E91-B65E-4254-93D5-39B029F9547B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27713E91-B65E-4254-93D5-39B029F9547B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
+                {D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {D8905DA6-E50D-4A5B-9D50-73607ECC71EE}.Release|Any CPU.Build.0 = Release|Any CPU
+                {CDBABA63-DD3D-48AE-A916-F4E7ABFF8353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {CDBABA63-DD3D-48AE-A916-F4E7ABFF8353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {CDBABA63-DD3D-48AE-A916-F4E7ABFF8353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {CDBABA63-DD3D-48AE-A916-F4E7ABFF8353}.Release|Any CPU.Build.0 = Release|Any CPU
+        EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
