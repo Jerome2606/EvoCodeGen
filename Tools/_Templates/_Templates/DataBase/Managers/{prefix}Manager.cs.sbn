@@ -4,9 +4,9 @@
 Generated automatically on {{date.now}}
 */
 using [GLOBAL_NAMESPACE].Models;
-using Storever.Framework.Common.Extensions;
-using Storever.Framework.DataBase;
-using Storever.Framework.DataBase.Managers;
+using MyCompany.Framework.Common.Extensions;
+using MyCompany.Framework.DataBase;
+using MyCompany.Framework.DataBase.Managers;
 using System;
 using System.Collections.Generic;
 using System.Data;

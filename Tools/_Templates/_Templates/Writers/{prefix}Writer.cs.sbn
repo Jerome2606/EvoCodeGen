@@ -10,19 +10,19 @@ using System.Text;
 using System.Threading.Tasks;
 using [GLOBAL_NAMESPACE].DataBase.Managers;
 using [GLOBAL_NAMESPACE].Models;
-using Storever.Framework.Models;
+using MyCompany.Framework.Models;
 
 namespace [GLOBAL_NAMESPACE].Writers
 {
     public class {{m.entityName}}Writer : AudioManagementDataBaseWriter<{{m.entityName}}>
     {
-        public {{m.entityName}}Writer(StoreverContext context, {{m.entityName}} model)
+        public {{m.entityName}}Writer(MyCompanyContext context, {{m.entityName}} model)
             : base(context)
         {
             base.Model = model;
         }
 
-        public {{m.entityName}}Writer(StoreverContext context, IEnumerable<{{m.entityName}}> model)
+        public {{m.entityName}}Writer(MyCompanyContext context, IEnumerable<{{m.entityName}}> model)
             : base(context)
         {
             base.Model = new BaseModelList() { Items = model };
@@ -37,9 +37,9 @@ namespace [GLOBAL_NAMESPACE].Writers
 
         protected override void Initialise()
         {
-            if (base.StoreverContext.GetType() == typeof(DataBaseContext))
+            if (base.MyCompanyContext.GetType() == typeof(DataBaseContext))
             {
-                Manager = new {{m.entityName}}Manager(((DataBaseContext)StoreverContext).Transaction);
+                Manager = new {{m.entityName}}Manager(((DataBaseContext)MyCompanyContext).Transaction);
             }
             else
             {

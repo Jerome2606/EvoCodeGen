@@ -11,7 +11,7 @@ namespace [GLOBAL_NAMESPACE].Readers
 {
     public class {{m.entityName}}Reader : AudioManagementDataBaseReader<{{m.entityName}}>
     {
-        public {{m.entityName}}Reader(StoreverContext context)
+        public {{m.entityName}}Reader(MyCompanyContext context)
             : base(context)
         {
         }
@@ -31,7 +31,7 @@ namespace [GLOBAL_NAMESPACE].Readers
         {
             base.Model = new {{m.entityName}}();
 
-            var dbContext = StoreverContext as DataBaseContext;
+            var dbContext = MyCompanyContext as DataBaseContext;
             if (dbContext?.Transaction != null)
                 base.Manager = new {{m.entityName}}Manager(dbContext.Transaction);
             else

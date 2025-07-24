@@ -3,7 +3,7 @@
 /*
 Generated automatically on {{date.now}}
 */
-using Storever.Framework.Models;
+using MyCompany.Framework.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
